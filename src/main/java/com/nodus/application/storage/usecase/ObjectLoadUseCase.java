@@ -3,9 +3,9 @@ package com.nodus.application.storage.usecase;
 import com.nodus.application.shared.HashUtils;
 import com.nodus.application.shared.InitializeRepositoryResult;
 import com.nodus.application.init.port.out.RepositoryMetadataPort;
+import com.nodus.application.storage.StoredObjectCodec;
 import com.nodus.application.storage.port.in.LoadObjectPort;
 import com.nodus.application.storage.port.out.ObjectStorePort;
-import com.nodus.application.storage.port.out.StoredObjectCodecPort;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.StoredRecord;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ObjectLoadUseCase implements LoadObjectPort {
     private final RepositoryMetadataPort repositoryMetadata;
-    private final StoredObjectCodecPort storedObjectCodec;
+    private final StoredObjectCodec storedObjectCodec;
     private final ObjectStorePort objectStore;
 
     @Override

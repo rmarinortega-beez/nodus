@@ -3,9 +3,9 @@ package com.nodus.application.storage.usecase;
 import com.nodus.application.shared.HashUtils;
 import com.nodus.application.shared.InitializeRepositoryResult;
 import com.nodus.application.init.port.out.RepositoryMetadataPort;
+import com.nodus.application.storage.StoredObjectCodec;
 import com.nodus.application.storage.port.in.StoreObjectPort;
 import com.nodus.application.storage.port.out.ObjectStorePort;
-import com.nodus.application.storage.port.out.StoredObjectCodecPort;
 import com.nodus.application.storage.port.out.WorkingTreeFileReaderPort;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.ObjectType;
@@ -19,7 +19,7 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ObjectStoreUseCase implements StoreObjectPort {
     private final RepositoryMetadataPort repositoryMetadata;
-    private final StoredObjectCodecPort storedObjectCodec;
+    private final StoredObjectCodec storedObjectCodec;
     private final ObjectStorePort objectStore;
     private final WorkingTreeFileReaderPort workingTreeFileReader;
 

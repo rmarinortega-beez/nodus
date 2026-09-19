@@ -1,6 +1,7 @@
 package com.nodus.application.init.usecase;
 
 import com.nodus.application.init.port.in.InitializeRepositoryPort;
+import com.nodus.application.init.port.out.RepositoryDirectoryPort;
 import com.nodus.application.init.port.out.RepositoryMetadataPort;
 import com.nodus.application.shared.InitializeRepositoryResult;
 import com.nodus.application.shared.PathType;
@@ -10,11 +11,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static java.nio.file.Files.createDirectory;
-
 @Component
 @RequiredArgsConstructor
 public class InitializeRepositoryUseCase implements InitializeRepositoryPort {
+    private final RepositoryDirectoryPort repositoryDirectory;
     private final RepositoryMetadataPort repositoryMetadata;
 
     @Override
@@ -24,7 +24,7 @@ public class InitializeRepositoryUseCase implements InitializeRepositoryPort {
 
         return switch (pathType) {
             case NOT_FOUND -> {
-                createDirectory(targetNodusPath);
+                repositoryDirectory.create(targetNodusPath);
                 repositoryMetadata.write(targetNodusPath);
                 yield InitializeRepositoryResult.INITIALIZED;
             }
