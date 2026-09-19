@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+M2_REPO="${M2_REPO:-$HOME/.m2/repository}"
+CLASSES_DIR="$PROJECT_DIR/target/classes"
+STAMP_FILE="$PROJECT_DIR/target/.nodus-build-stamp"
+
+JARS=(
+  "$M2_REPO/info/picocli/picocli/4.7.7/picocli-4.7.7.jar"
+  "$M2_REPO/org/springframework/spring-context/6.2.19/spring-context-6.2.19.jar"
+  "$M2_REPO/org/springframework/spring-aop/6.2.19/spring-aop-6.2.19.jar"
+  "$M2_REPO/org/springframework/spring-beans/6.2.19/spring-beans-6.2.19.jar"
+  "$M2_REPO/org/springframework/spring-core/6.2.19/spring-core-6.2.19.jar"
+  "$M2_REPO/org/springframework/spring-expression/6.2.19/spring-expression-6.2.19.jar"
+  "$M2_REPO/org/springframework/spring-jcl/6.2.19/spring-jcl-6.2.19.jar"
+  "$M2_REPO/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar"
+)
+
+classpath() {
+  local value="$CLASSES_DIR"
+  local jar
+
+  for jar in "${JARS[@]}"; do
+    value="$value:$jar"
+  done
+
+  printf '%s' "$value"
+}
+
+require_dependencies() {
+  local missing=0
+  local jar
+
+  for jar in "${JARS[@]}"; do
+    if [[ ! -f "$jar" ]]; then
+      printf 'Missing dependency: %s\n' "$jar" >&2
+      missing=1
+    fi
+  done
+
+  if [[ "$missing" -ne 0 ]]; then
+    printf 'Install dependencies with Maven/your IDE, or set M2_REPO to the Maven repository path.\n' >&2
+    exit 1
+  fi
+}
+
+needs_compile() {
+  [[ ! -f "$STAMP_FILE" ]] && return 0
+  [[ ! -f "$CLASSES_DIR/com/nodus/Nodus.class" ]] && return 0
+  find "$PROJECT_DIR/src/main/java" -name '*.java' -newer "$STAMP_FILE" -print -quit | grep -q .
+}
+
+compile() {
+  mkdir -p "$CLASSES_DIR" "$PROJECT_DIR/target"
+  find "$PROJECT_DIR/src/main/java" -name '*.java' -print0 |
+    xargs -0 javac \
+      --release 21 \
+      -cp "$(classpath)" \
+      -processorpath "$M2_REPO/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" \
+      -d "$CLASSES_DIR"
+  touch "$STAMP_FILE"
+}
+
+require_dependencies
+
+if needs_compile; then
+  compile
+fi
+
+exec java -cp "$(classpath)" com.nodus.Nodus "$@"
