@@ -1,6 +1,6 @@
 package com.nodus;
 
-import com.nodus.adapters.in.cli.NodusCommand;
+import com.nodus.infrastructure.adapters.in.cli.NodusCommand;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import picocli.CommandLine;
 
