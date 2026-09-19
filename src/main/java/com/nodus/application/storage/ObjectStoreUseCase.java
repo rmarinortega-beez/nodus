@@ -1,12 +1,11 @@
 package com.nodus.application.storage;
 
+import com.nodus.application.shared.HashUtils;
 import com.nodus.domain.enums.InitializeRepositoryResult;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.ObjectType;
-import com.nodus.domain.object.StoredRecord;
-import com.nodus.infrastructure.object.ObjectIdCalculator;
-import com.nodus.infrastructure.object.ObjectRecordCodec;
 import com.nodus.infrastructure.object.ObjectStore;
+import com.nodus.infrastructure.object.StoredObjectCodec;
 import com.nodus.infrastructure.repository.RepositoryMetadata;
 import com.nodus.infrastructure.worktree.WorkingTreeFileReader;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,7 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ObjectStoreUseCase {
     private final RepositoryMetadata repositoryMetadata;
-    private final ObjectRecordCodec objectRecordCodec;
-    private final ObjectIdCalculator objectIdCalculator;
+    private final StoredObjectCodec storedObjectCodec;
     private final ObjectStore objectStore;
     private final WorkingTreeFileReader workingTreeFileReader;
 
@@ -30,9 +28,9 @@ public class ObjectStoreUseCase {
             throw new IOException("Current directory is not a valid Nodus repository.");
         }
 
-        StoredRecord record = new StoredRecord(ObjectType.BLOB, workingTreeFileReader.read(object));
-        byte[] canonicalObject = objectRecordCodec.encode(record);
-        ObjectId objectId = objectIdCalculator.calculate(canonicalObject);
+        byte[] content = workingTreeFileReader.read(object);
+        byte[] canonicalObject = storedObjectCodec.encode(ObjectType.BLOB, content);
+        ObjectId objectId = HashUtils.calculateHash(canonicalObject);
         objectStore.writeIfAbsent(nodusPath, objectId, canonicalObject);
 
         return objectId;

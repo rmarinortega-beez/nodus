@@ -9,12 +9,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Component
-public class ObjectRecordCodec {
+public class StoredObjectCodec {
     private static final byte TYPE_SEPARATOR = 0;
 
-    public byte[] encode(StoredRecord record) {
-        byte[] serializedType = record.type().serializedName().getBytes(StandardCharsets.UTF_8);
-        byte[] content = record.content();
+    public byte[] encode(ObjectType type, byte[] content) {
+        byte[] serializedType = type.serializedName().getBytes(StandardCharsets.UTF_8);
         ByteArrayOutputStream output = new ByteArrayOutputStream(
                 serializedType.length + 1 + content.length
         );
