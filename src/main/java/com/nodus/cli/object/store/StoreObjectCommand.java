@@ -23,6 +23,7 @@ public class StoreObjectCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        System.out.println("[nodus:store] Command received");
 
         ObjectId object = objectStoreUseCase.store(file, currentDirectory);
         System.out.println("Stored object with ID: " + object.value());

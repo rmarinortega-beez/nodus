@@ -26,6 +26,7 @@ public class ObjectCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        System.out.println("[nodus:object] Command group received");
         spec.commandLine().usage(System.out);
         return 0;
     }

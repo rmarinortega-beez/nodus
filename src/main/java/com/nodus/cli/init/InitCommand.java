@@ -22,6 +22,7 @@ public class InitCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        System.out.println("[nodus:init] Command received");
         return switch (initializeRepositoryUseCase.execute(currentDirectory)) {
             case InitializeRepositoryResult.INITIALIZED -> {
                 System.out.println("Initialized empty Nodus repository in "

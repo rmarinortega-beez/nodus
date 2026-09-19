@@ -24,6 +24,7 @@ public class LoadObjectCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        System.out.println("[nodus:load] Command received");
         ObjectId objectId = new ObjectId(this.objectId);
 
         byte[] object = objectLoadUseCase.load(objectId, currentDirectory);

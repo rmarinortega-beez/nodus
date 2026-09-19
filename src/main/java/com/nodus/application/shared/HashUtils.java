@@ -14,20 +14,23 @@ import java.util.HexFormat;
 public class HashUtils {
 
     public static String calculateHash(Path file, ObjectType type) throws IOException, NoSuchAlgorithmException {
+        System.out.println("[nodus:hash] Calculating SHA-256 for " + file + " as " + type.serializedName());
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
         try (InputStream inputStream = Files.newInputStream(file)) {
             byte[] buffer = new byte[8192];
             int bytesRead;
 
-            digest.update(type.toString().getBytes(StandardCharsets.UTF_8));
+            digest.update((type.serializedName() + "\0").getBytes(StandardCharsets.UTF_8));
 
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 digest.update(buffer, 0, bytesRead);
             }
         }
 
-        return HexFormat.of().formatHex(digest.digest());
+        String hash = HexFormat.of().formatHex(digest.digest());
+        System.out.println("[nodus:hash] Calculated hash " + hash);
+        return hash;
     }
 
 }
