@@ -1,5 +1,6 @@
-package com.nodus.infrastructure.object;
+package com.nodus.adapters.out.filesystem.object;
 
+import com.nodus.application.port.ObjectStorePort;
 import com.nodus.domain.object.ObjectId;
 import org.springframework.stereotype.Component;
 
@@ -8,9 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
-public class ObjectStore {
+public class ObjectStore implements ObjectStorePort {
     private static final String OBJECTS_DIRECTORY = "objects";
 
+    @Override
     public void writeIfAbsent(Path nodusPath, ObjectId objectId, byte[] canonicalObject) throws IOException {
         Path objectPath = objectPath(nodusPath, objectId);
         Files.createDirectories(objectPath.getParent());
@@ -20,6 +22,7 @@ public class ObjectStore {
         }
     }
 
+    @Override
     public byte[] read(Path nodusPath, ObjectId objectId) throws IOException {
         return Files.readAllBytes(objectPath(nodusPath, objectId));
     }

@@ -1,4 +1,4 @@
-package com.nodus.domain.enums;
+package com.nodus.application.init;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,4 +25,3 @@ public enum PathType {
         return PathType.OTHER;
     }
 }
-

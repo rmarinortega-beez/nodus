@@ -1,7 +1,7 @@
-package com.nodus.cli.init;
+package com.nodus.adapters.in.cli.init;
 
 import com.nodus.application.init.InitializeRepositoryUseCase;
-import com.nodus.domain.enums.InitializeRepositoryResult;
+import com.nodus.application.init.InitializeRepositoryResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;

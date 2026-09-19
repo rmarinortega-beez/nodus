@@ -1,12 +1,11 @@
 package com.nodus.application.storage;
 
-import com.nodus.application.shared.HashUtils;
-import com.nodus.domain.enums.InitializeRepositoryResult;
+import com.nodus.application.port.ObjectStorePort;
+import com.nodus.application.port.RepositoryMetadataPort;
+import com.nodus.application.port.StoredObjectCodecPort;
+import com.nodus.application.init.InitializeRepositoryResult;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.StoredRecord;
-import com.nodus.infrastructure.object.ObjectStore;
-import com.nodus.infrastructure.object.StoredObjectCodec;
-import com.nodus.infrastructure.repository.RepositoryMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +15,9 @@ import java.nio.file.Path;
 @Component
 @RequiredArgsConstructor
 public class ObjectLoadUseCase {
-    private final RepositoryMetadata repositoryMetadata;
-    private final StoredObjectCodec storedObjectCodec;
-    private final ObjectStore objectStore;
+    private final RepositoryMetadataPort repositoryMetadata;
+    private final StoredObjectCodecPort storedObjectCodec;
+    private final ObjectStorePort objectStore;
 
     public StoredRecord load(ObjectId objectId, Path repositoryPath) throws IOException {
         Path nodusPath = repositoryPath.resolve(".nodus");

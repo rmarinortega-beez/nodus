@@ -52,7 +52,11 @@ needs_compile() {
 }
 
 compile() {
-  mkdir -p "$CLASSES_DIR" "$PROJECT_DIR/target"
+  mkdir -p "$PROJECT_DIR/target"
+  if [[ -d "$CLASSES_DIR" ]]; then
+    find "$CLASSES_DIR" -type f -name '*.class' -delete
+  fi
+  mkdir -p "$CLASSES_DIR"
   find "$PROJECT_DIR/src/main/java" -name '*.java' -print0 |
     xargs -0 javac \
       --release 21 \

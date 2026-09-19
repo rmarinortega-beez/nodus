@@ -1,7 +1,7 @@
-package com.nodus.cli.object;
+package com.nodus.adapters.in.cli.object;
 
-import com.nodus.cli.object.store.LoadObjectCommand;
-import com.nodus.cli.object.store.StoreObjectCommand;
+import com.nodus.adapters.in.cli.object.store.LoadObjectCommand;
+import com.nodus.adapters.in.cli.object.store.StoreObjectCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;

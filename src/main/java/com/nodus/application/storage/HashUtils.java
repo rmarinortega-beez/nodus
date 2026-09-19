@@ -1,4 +1,4 @@
-package com.nodus.application.shared;
+package com.nodus.application.storage;
 
 import com.nodus.domain.object.ObjectId;
 

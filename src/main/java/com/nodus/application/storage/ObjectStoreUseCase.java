@@ -1,13 +1,12 @@
 package com.nodus.application.storage;
 
-import com.nodus.application.shared.HashUtils;
-import com.nodus.domain.enums.InitializeRepositoryResult;
+import com.nodus.application.port.ObjectStorePort;
+import com.nodus.application.port.RepositoryMetadataPort;
+import com.nodus.application.port.StoredObjectCodecPort;
+import com.nodus.application.port.WorkingTreeFileReaderPort;
+import com.nodus.application.init.InitializeRepositoryResult;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.ObjectType;
-import com.nodus.infrastructure.object.ObjectStore;
-import com.nodus.infrastructure.object.StoredObjectCodec;
-import com.nodus.infrastructure.repository.RepositoryMetadata;
-import com.nodus.infrastructure.worktree.WorkingTreeFileReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +16,10 @@ import java.nio.file.Path;
 @Component
 @RequiredArgsConstructor
 public class ObjectStoreUseCase {
-    private final RepositoryMetadata repositoryMetadata;
-    private final StoredObjectCodec storedObjectCodec;
-    private final ObjectStore objectStore;
-    private final WorkingTreeFileReader workingTreeFileReader;
+    private final RepositoryMetadataPort repositoryMetadata;
+    private final StoredObjectCodecPort storedObjectCodec;
+    private final ObjectStorePort objectStore;
+    private final WorkingTreeFileReaderPort workingTreeFileReader;
 
     public ObjectId store(Path object, Path repositoryPath) throws IOException {
         Path nodusPath = repositoryPath.resolve(".nodus");

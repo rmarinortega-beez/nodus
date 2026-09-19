@@ -1,7 +1,7 @@
-package com.nodus.cli;
+package com.nodus.adapters.in.cli;
 
-import com.nodus.cli.init.InitCommand;
-import com.nodus.cli.object.ObjectCommand;
+import com.nodus.adapters.in.cli.init.InitCommand;
+import com.nodus.adapters.in.cli.object.ObjectCommand;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;

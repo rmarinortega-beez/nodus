@@ -1,5 +1,6 @@
-package com.nodus.infrastructure.object;
+package com.nodus.adapters.out.filesystem.object;
 
+import com.nodus.application.port.StoredObjectCodecPort;
 import com.nodus.domain.object.ObjectType;
 import com.nodus.domain.object.StoredRecord;
 import org.springframework.stereotype.Component;
@@ -9,9 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Component
-public class StoredObjectCodec {
+public class StoredObjectCodec implements StoredObjectCodecPort {
     private static final byte TYPE_SEPARATOR = 0;
 
+    @Override
     public byte[] encode(ObjectType type, byte[] content) {
         byte[] serializedType = type.serializedName().getBytes(StandardCharsets.UTF_8);
         ByteArrayOutputStream output = new ByteArrayOutputStream(
@@ -25,6 +27,7 @@ public class StoredObjectCodec {
         return output.toByteArray();
     }
 
+    @Override
     public StoredRecord decode(byte[] storedObject) {
         int separatorIndex = findSeparator(storedObject);
         if (separatorIndex < 0) {

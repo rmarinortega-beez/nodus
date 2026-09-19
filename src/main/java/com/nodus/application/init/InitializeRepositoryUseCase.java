@@ -1,8 +1,6 @@
 package com.nodus.application.init;
 
-import com.nodus.domain.enums.InitializeRepositoryResult;
-import com.nodus.domain.enums.PathType;
-import com.nodus.infrastructure.repository.RepositoryMetadata;
+import com.nodus.application.port.RepositoryMetadataPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +12,7 @@ import static java.nio.file.Files.createDirectory;
 @Component
 @RequiredArgsConstructor
 public class InitializeRepositoryUseCase {
-    private final RepositoryMetadata repositoryMetadata;
+    private final RepositoryMetadataPort repositoryMetadata;
 
     public InitializeRepositoryResult execute(Path currentDirectory) throws IOException {
         Path targetNodusPath = currentDirectory.resolve(".nodus");

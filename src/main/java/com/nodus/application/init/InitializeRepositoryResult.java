@@ -1,4 +1,4 @@
-package com.nodus.domain.enums;
+package com.nodus.application.init;
 
 public enum InitializeRepositoryResult {
     INITIALIZED,

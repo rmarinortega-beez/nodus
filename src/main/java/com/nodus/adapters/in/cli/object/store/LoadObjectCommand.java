@@ -1,4 +1,4 @@
-package com.nodus.cli.object.store;
+package com.nodus.adapters.in.cli.object.store;
 
 import com.nodus.application.storage.ObjectLoadUseCase;
 import com.nodus.domain.object.ObjectId;
