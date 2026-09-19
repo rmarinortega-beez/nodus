@@ -2,6 +2,7 @@ package com.nodus.cli.object.store;
 
 import com.nodus.application.storage.ObjectLoadUseCase;
 import com.nodus.domain.object.ObjectId;
+import com.nodus.domain.object.StoredRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
@@ -27,9 +28,9 @@ public class LoadObjectCommand implements Callable<Integer> {
         System.out.println("[nodus:load] Command received");
         ObjectId objectId = new ObjectId(this.objectId);
 
-        byte[] object = objectLoadUseCase.load(objectId, currentDirectory);
+        StoredRecord object = objectLoadUseCase.load(objectId, currentDirectory);
         System.out.println("Loaded object with ID: " + objectId.value());
-        System.out.println("Object content: " + new String(object, StandardCharsets.UTF_8));
+        System.out.println("Object content: " + new String(object.content(), StandardCharsets.UTF_8));
 
         return 0;
     }

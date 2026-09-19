@@ -1,4 +1,4 @@
-package com.nodus.domain.enums;
+package com.nodus.domain.object;
 
 public enum ObjectType {
     BLOB("blob"),
@@ -20,6 +20,7 @@ public enum ObjectType {
                 return type;
             }
         }
+
         throw new IllegalArgumentException("Unknown object type: " + serializedType);
     }
 }

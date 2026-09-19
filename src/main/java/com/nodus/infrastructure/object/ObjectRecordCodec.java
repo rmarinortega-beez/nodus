@@ -1,0 +1,50 @@
+package com.nodus.infrastructure.object;
+
+import com.nodus.domain.object.ObjectType;
+import com.nodus.domain.object.StoredRecord;
+import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+@Component
+public class ObjectRecordCodec {
+    private static final byte TYPE_SEPARATOR = 0;
+
+    public byte[] encode(StoredRecord record) {
+        byte[] serializedType = record.type().serializedName().getBytes(StandardCharsets.UTF_8);
+        byte[] content = record.content();
+        ByteArrayOutputStream output = new ByteArrayOutputStream(
+                serializedType.length + 1 + content.length
+        );
+
+        output.writeBytes(serializedType);
+        output.write(TYPE_SEPARATOR);
+        output.writeBytes(content);
+
+        return output.toByteArray();
+    }
+
+    public StoredRecord decode(byte[] storedObject) {
+        int separatorIndex = findSeparator(storedObject);
+        if (separatorIndex < 0) {
+            throw new IllegalArgumentException("Invalid stored object: missing type separator");
+        }
+
+        String serializedType = new String(storedObject, 0, separatorIndex, StandardCharsets.UTF_8);
+        byte[] content = Arrays.copyOfRange(storedObject, separatorIndex + 1, storedObject.length);
+
+        return new StoredRecord(ObjectType.fromSerializedName(serializedType), content);
+    }
+
+    private int findSeparator(byte[] storedObject) {
+        for (int i = 0; i < storedObject.length; i++) {
+            if (storedObject[i] == TYPE_SEPARATOR) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
