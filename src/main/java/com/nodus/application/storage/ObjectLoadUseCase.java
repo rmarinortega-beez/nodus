@@ -1,27 +1,30 @@
 package com.nodus.application.storage;
 
 import com.nodus.application.shared.HashUtils;
+import com.nodus.application.shared.RepositoryUtils;
+import com.nodus.domain.enums.InitializeRepositoryResult;
 import com.nodus.domain.enums.ObjectType;
 import com.nodus.domain.object.ObjectId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HexFormat;
 
 @Component
 @RequiredArgsConstructor
 public class ObjectLoadUseCase {
-    public byte[] load(ObjectId objectId) throws IOException, NoSuchAlgorithmException {
-        Path repositoryPath = Path.of("").toAbsolutePath().normalize().resolve(".nodus");
-        Path objectPath = repositoryPath.resolve("objects").resolve(objectId.value());
+    public byte[] load(ObjectId objectId, Path repositoryPath) throws IOException, NoSuchAlgorithmException {
+        Path nodusPath = repositoryPath.resolve(".nodus");
+        if (RepositoryUtils.getRepositoryStatus(nodusPath) != InitializeRepositoryResult.ALREADY_INITIALIZED) {
+            throw new IOException("Current directory is not a valid Nodus repository.");
+        }
 
-        if(!isValid(objectPath, ObjectType.BLOB_00)) {
+        Path objectPath = nodusPath.resolve("objects").resolve(objectId.value());
+
+        if (!isValid(objectPath, ObjectType.BLOB_00)) {
             throw new IOException("Object with ID " + objectId.value() + " is corrupted or does not exist.");
         }
 

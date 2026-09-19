@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
@@ -19,14 +20,15 @@ public class LoadObjectCommand implements Callable<Integer> {
     private String objectId;
 
     private final ObjectLoadUseCase objectLoadUseCase;
+    private final Path currentDirectory = Path.of("").toAbsolutePath().normalize();
 
     @Override
     public Integer call() throws Exception {
         ObjectId objectId = new ObjectId(this.objectId);
 
-        byte[] object = objectLoadUseCase.load(objectId);
+        byte[] object = objectLoadUseCase.load(objectId, currentDirectory);
         System.out.println("Loaded object with ID: " + objectId.value());
-        System.out.println("Object content: " + new String(object));
+        System.out.println("Object content: " + new String(object, StandardCharsets.UTF_8));
 
         return 0;
     }

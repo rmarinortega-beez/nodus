@@ -1,6 +1,6 @@
 package com.nodus.application.init;
 
-import com.nodus.application.shared.RepositiryUtils;
+import com.nodus.application.shared.RepositoryUtils;
 import com.nodus.domain.enums.InitializeRepositoryResult;
 import com.nodus.domain.enums.PathType;
 import org.springframework.stereotype.Component;
@@ -18,10 +18,10 @@ public class InitializeRepositoryUseCase {
         return switch (pathType) {
             case NOT_FOUND -> {
                 createDirectory(targetNodusPath);
-                RepositiryUtils.generateRepositoryMetadata(targetNodusPath);
+                RepositoryUtils.generateRepositoryMetadata(targetNodusPath);
                 yield InitializeRepositoryResult.INITIALIZED;
             }
-            case DIRECTORY -> RepositiryUtils.isValidRepository(targetNodusPath);
+            case DIRECTORY -> RepositoryUtils.getRepositoryStatus(targetNodusPath);
             case REGULAR_FILE, OTHER -> InitializeRepositoryResult.PATH_CONFLICT;
         };
     }
