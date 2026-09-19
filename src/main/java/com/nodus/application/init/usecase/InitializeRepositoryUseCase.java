@@ -20,7 +20,7 @@ public class InitializeRepositoryUseCase implements InitializeRepositoryPort {
     @Override
     public InitializeRepositoryResult execute(Path currentDirectory) throws IOException {
         Path targetNodusPath = currentDirectory.resolve(".nodus");
-        PathType pathType = PathType.getPathType(targetNodusPath);
+        PathType pathType = repositoryDirectory.typeOf(targetNodusPath);
 
         return switch (pathType) {
             case NOT_FOUND -> {
