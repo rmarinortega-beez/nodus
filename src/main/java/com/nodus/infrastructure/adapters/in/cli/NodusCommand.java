@@ -1,5 +1,6 @@
 package com.nodus.infrastructure.adapters.in.cli;
 
+import com.nodus.infrastructure.adapters.in.cli.add.AddCommand;
 import com.nodus.infrastructure.adapters.in.cli.init.InitCommand;
 import com.nodus.infrastructure.adapters.in.cli.object.ObjectCommand;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import picocli.CommandLine.Spec;
         description = "A small distributed version control system",
         mixinStandardHelpOptions = true,
         subcommands = {
+                AddCommand.class,
                 InitCommand.class,
                 ObjectCommand.class
         }
