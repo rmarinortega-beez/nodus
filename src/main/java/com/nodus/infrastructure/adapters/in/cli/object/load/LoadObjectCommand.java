@@ -1,4 +1,4 @@
-package com.nodus.infrastructure.adapters.in.cli.object.store;
+package com.nodus.infrastructure.adapters.in.cli.object.load;
 
 import com.nodus.application.storage.port.in.LoadObjectPort;
 import com.nodus.domain.object.ObjectId;

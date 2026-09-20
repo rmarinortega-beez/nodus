@@ -1,6 +1,6 @@
 package com.nodus.infrastructure.adapters.in.cli.object;
 
-import com.nodus.infrastructure.adapters.in.cli.object.store.LoadObjectCommand;
+import com.nodus.infrastructure.adapters.in.cli.object.load.LoadObjectCommand;
 import com.nodus.infrastructure.adapters.in.cli.object.store.StoreObjectCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
