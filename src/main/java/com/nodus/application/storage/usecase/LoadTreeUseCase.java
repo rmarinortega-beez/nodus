@@ -1,12 +1,10 @@
 package com.nodus.application.storage.usecase;
 
 import com.nodus.application.init.port.out.RepositoryMetadataPort;
-import com.nodus.application.shared.HashUtils;
 import com.nodus.application.shared.InitializeRepositoryResult;
-import com.nodus.application.storage.StoredObjectCodec;
+import com.nodus.application.storage.ObjectStorageService;
 import com.nodus.application.storage.TreeCodec;
 import com.nodus.application.storage.port.in.LoadTreePort;
-import com.nodus.application.storage.port.out.ObjectStorePort;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.ObjectType;
 import com.nodus.domain.object.StoredRecord;
@@ -22,8 +20,7 @@ import java.nio.file.Path;
 public class LoadTreeUseCase implements LoadTreePort {
     private final RepositoryMetadataPort repositoryMetadata;
     private final TreeCodec treeCodec;
-    private final StoredObjectCodec storedObjectCodec;
-    private final ObjectStorePort objectStore;
+    private final ObjectStorageService objectStorageService;
 
     @Override
     public Tree load(ObjectId objectId, Path repositoryPath) throws IOException {
@@ -32,12 +29,7 @@ public class LoadTreeUseCase implements LoadTreePort {
             throw new IOException("Current directory is not a valid Nodus repository.");
         }
 
-        byte[] canonicalObject = objectStore.read(nodusPath, objectId);
-        if (!HashUtils.calculateHash(canonicalObject).equals(objectId)) {
-            throw new IOException("Object with ID " + objectId.value() + " is corrupted or does not exist.");
-        }
-
-        StoredRecord storedRecord = decodeStoredObject(objectId, canonicalObject);
+        StoredRecord storedRecord = objectStorageService.load(nodusPath, objectId);
         if (storedRecord.type() != ObjectType.TREE) {
             throw new IOException("Object with ID " + objectId.value() + " is not a tree.");
         }
@@ -46,14 +38,6 @@ public class LoadTreeUseCase implements LoadTreePort {
             return treeCodec.decode(storedRecord.content());
         } catch (IllegalArgumentException e) {
             throw new IOException("Tree object with ID " + objectId.value() + " has an invalid format.", e);
-        }
-    }
-
-    private StoredRecord decodeStoredObject(ObjectId objectId, byte[] canonicalObject) throws IOException {
-        try {
-            return storedObjectCodec.decode(canonicalObject);
-        } catch (IllegalArgumentException e) {
-            throw new IOException("Object with ID " + objectId.value() + " has an invalid stored format.", e);
         }
     }
 }

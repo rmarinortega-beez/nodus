@@ -1,11 +1,9 @@
 package com.nodus.application.storage.usecase;
 
-import com.nodus.application.shared.HashUtils;
 import com.nodus.application.shared.InitializeRepositoryResult;
 import com.nodus.application.init.port.out.RepositoryMetadataPort;
-import com.nodus.application.storage.StoredObjectCodec;
+import com.nodus.application.storage.ObjectStorageService;
 import com.nodus.application.storage.port.in.LoadObjectPort;
-import com.nodus.application.storage.port.out.ObjectStorePort;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.StoredRecord;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +16,7 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ObjectLoadUseCase implements LoadObjectPort {
     private final RepositoryMetadataPort repositoryMetadata;
-    private final StoredObjectCodec storedObjectCodec;
-    private final ObjectStorePort objectStore;
+    private final ObjectStorageService objectStorageService;
 
     @Override
     public StoredRecord load(ObjectId objectId, Path repositoryPath) throws IOException {
@@ -28,16 +25,6 @@ public class ObjectLoadUseCase implements LoadObjectPort {
             throw new IOException("Current directory is not a valid Nodus repository.");
         }
 
-        byte[] canonicalObject = objectStore.read(nodusPath, objectId);
-
-        if (!HashUtils.calculateHash(canonicalObject).equals(objectId)) {
-            throw new IOException("Object with ID " + objectId.value() + " is corrupted or does not exist.");
-        }
-
-        try {
-            return storedObjectCodec.decode(canonicalObject);
-        } catch (IllegalArgumentException e) {
-            throw new IOException("Object with ID " + objectId.value() + " has an invalid stored format.", e);
-        }
+        return objectStorageService.load(nodusPath, objectId);
     }
 }

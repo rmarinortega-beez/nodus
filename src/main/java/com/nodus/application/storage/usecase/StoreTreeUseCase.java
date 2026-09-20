@@ -1,12 +1,10 @@
 package com.nodus.application.storage.usecase;
 
 import com.nodus.application.init.port.out.RepositoryMetadataPort;
-import com.nodus.application.shared.HashUtils;
 import com.nodus.application.shared.InitializeRepositoryResult;
-import com.nodus.application.storage.StoredObjectCodec;
+import com.nodus.application.storage.ObjectStorageService;
 import com.nodus.application.storage.TreeCodec;
 import com.nodus.application.storage.port.in.StoreTreePort;
-import com.nodus.application.storage.port.out.ObjectStorePort;
 import com.nodus.domain.object.ObjectId;
 import com.nodus.domain.object.ObjectType;
 import com.nodus.domain.tree.Tree;
@@ -21,8 +19,7 @@ import java.nio.file.Path;
 public class StoreTreeUseCase implements StoreTreePort {
     private final RepositoryMetadataPort repositoryMetadata;
     private final TreeCodec treeCodec;
-    private final StoredObjectCodec storedObjectCodec;
-    private final ObjectStorePort objectStore;
+    private final ObjectStorageService objectStorageService;
 
     @Override
     public ObjectId store(Tree tree, Path repositoryPath) throws IOException {
@@ -32,10 +29,6 @@ public class StoreTreeUseCase implements StoreTreePort {
         }
 
         byte[] treeContent = treeCodec.encode(tree);
-        byte[] canonicalObject = storedObjectCodec.encode(ObjectType.TREE, treeContent);
-        ObjectId objectId = HashUtils.calculateHash(canonicalObject);
-        objectStore.writeIfAbsent(nodusPath, objectId, canonicalObject);
-
-        return objectId;
+        return objectStorageService.store(nodusPath, ObjectType.TREE, treeContent);
     }
 }
